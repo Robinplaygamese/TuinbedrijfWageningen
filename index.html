@@ -312,48 +312,108 @@
   }
 
   /* ---------- DIENSTEN ---------- */
-  .diensten-grid{
-    display:grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
+  .diensten-categories{
+    display:flex;
+    flex-direction: column;
+    gap: 14px;
   }
-  @media (max-width: 900px){
-    .diensten-grid{ grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 520px){
-    .diensten-grid{ grid-template-columns: 1fr; }
-  }
-  .dienst-card{
+  .dienst-category{
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    padding: 26px 22px;
-    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    overflow: hidden;
+    transition: border-color .15s ease;
   }
-  .dienst-card:hover{
-    transform: translateY(-4px);
-    box-shadow: 0 18px 34px -18px rgba(22,36,26,0.3);
-    border-color: rgba(111,161,63,0.4);
+  .dienst-category[open]{ border-color: rgba(111,161,63,0.4); }
+  .dienst-category summary{
+    list-style: none;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    padding: 22px 24px;
   }
-  .dienst-card .ic{
-    width: 46px; height:46px;
-    border-radius: 12px;
+  .dienst-category summary::-webkit-details-marker{ display:none; }
+  .dienst-category summary::marker{ content:''; }
+  .dienst-category summary .cat-title{
+    display:flex;
+    align-items:center;
+    gap: 16px;
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--forest);
+    flex: 1;
+  }
+  .dienst-category summary .cat-icon{
+    width: 42px; height: 42px;
+    border-radius: 11px;
     background: var(--grass-light);
-    display:flex; align-items:center; justify-content:center;
-    margin-bottom: 18px;
+    color: var(--forest);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink: 0;
   }
-  .dienst-card .ic svg{ width:24px; height:24px; stroke: var(--forest); }
-  .dienst-card h3{
-    font-size: 1.08rem;
-    margin-bottom: 8px;
-  }
-  .dienst-card p{
+  .dienst-category summary .cat-icon svg{ width: 21px; height: 21px; }
+  .dienst-category summary .cat-count{
+    font-size: 0.75rem;
     color: var(--ink-soft);
-    font-size: 0.93rem;
-    margin:0;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 5px 11px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .dienst-category summary .chevron{
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    color: var(--ink-soft);
+    transition: transform .2s ease;
+  }
+  .dienst-category[open] summary .chevron{ transform: rotate(180deg); }
+  .dienst-category .dienst-items{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px 28px;
+    padding: 4px 24px 26px 80px;
+  }
+  @media (max-width: 760px){
+    .dienst-category .dienst-items{ grid-template-columns: repeat(2, 1fr); padding-left: 24px; }
+  }
+  @media (max-width: 480px){
+    .dienst-category .dienst-items{ grid-template-columns: 1fr; padding-left: 24px; }
+    .dienst-category summary{ padding: 16px 18px; gap: 12px; }
+    .dienst-category summary .cat-icon{ width: 36px; height: 36px; }
+    .dienst-category summary .cat-icon svg{ width: 18px; height: 18px; }
+    .dienst-category summary .cat-title{ font-size: 1.02rem; gap: 12px; }
+  }
+  .dienst-item{
+    display:flex;
+    align-items:center;
+    gap: 11px;
+    padding: 10px 0;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+  }
+  .dienst-item:nth-last-child(-n+3){ border-bottom: none; }
+  @media (max-width: 760px){
+    .dienst-item:nth-last-child(-n+3){ border-bottom: 1px solid var(--line); }
+    .dienst-item:nth-last-child(-n+2){ border-bottom: none; }
+  }
+  @media (max-width: 480px){
+    .dienst-item:nth-last-child(-n+2){ border-bottom: 1px solid var(--line); }
+    .dienst-item:last-child{ border-bottom: none; }
+  }
+  .dienst-item .item-dot{
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--grass);
+    flex-shrink: 0;
   }
   .dienst-note{
-    margin-top: 20px;
+    margin-top: 24px;
     color: var(--ink-soft);
     font-size: 0.95rem;
   }
@@ -532,57 +592,51 @@
     padding: 30px 28px;
   }
   .calc-label{
-    display:flex;
-    justify-content: space-between;
-    align-items: baseline;
+    display:block;
     font-size: 0.88rem;
     font-weight: 600;
     color: var(--forest);
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
-  .calc-label:not(:first-child){ margin-top: 24px; }
-  .calc-label .mono{
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--ink-soft);
+  .calc-group:not(:first-child){ margin-top: 26px; }
+
+  .calc-checks, .calc-radios{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
-  select.calc-select{
-    width: 100%;
-    appearance: none;
-    -webkit-appearance: none;
-    background: var(--bg);
+  @media (max-width: 480px){
+    .calc-checks, .calc-radios{ grid-template-columns: 1fr; }
+  }
+  .calc-check, .calc-radio{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding: 12px 14px;
     border: 1px solid var(--line);
     border-radius: 12px;
-    padding: 13px 40px 13px 16px;
-    font-family: 'Schibsted Grotesk', sans-serif;
-    font-size: 0.98rem;
-    font-weight: 500;
-    color: var(--ink);
+    font-size: 0.92rem;
     cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F3D2B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    background-size: 18px;
-    transition: border-color .15s ease;
-  }
-  select.calc-select:hover{ border-color: var(--grass); }
-
-  input[type="range"].calc-range{
-    width: 100%;
-    height: 6px;
-    border-radius: 999px;
     background: var(--bg);
-    accent-color: var(--forest);
-    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
   }
-  .calc-scale{
-    display:flex;
-    justify-content: space-between;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--ink-soft);
-    opacity: 0.7;
-    margin-top: 6px;
+  .calc-check input, .calc-radio input{
+    accent-color: var(--forest);
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+  }
+  .calc-check:hover, .calc-radio:hover{ border-color: var(--grass); }
+  .calc-check.is-checked, .calc-radio.is-checked{
+    border-color: var(--grass);
+    background: var(--grass-light);
+  }
+  .calc-check.calc-check-highlight{
+    border-style: dashed;
+    border-color: var(--soil);
+  }
+  .calc-check.calc-check-highlight.is-checked{
+    border-style: solid;
+    border-color: var(--grass);
   }
 
   .calc-result{
@@ -816,30 +870,91 @@
       <div class="section-head reveal">
         <span class="kicker">Wat wij doen</span>
         <h2>Alles voor een nette, verzorgde tuin</h2>
-        <p>Van een snelle beurt tot een tuin die al maanden is blijven liggen — we pakken het samen aan.</p>
+        <p>Van een snelle beurt tot een tuin die al maanden is blijven liggen — we pakken het samen aan. Klik een categorie open voor het volledige overzicht.</p>
       </div>
-      <div class="diensten-grid">
-        <div class="dienst-card reveal">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M6 20V10l6-6 6 6v10"/><path d="M9 20v-6h6v6"/></svg></div>
-          <h3>Grasmaaien</h3>
-          <p>Strak gemaaid gazon met rechte randen, ook bij lastige hoekjes en obstakels.</p>
-        </div>
-        <div class="dienst-card reveal">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7a8 8 0 0 1 16 0v7"/><path d="M4 14h16"/><path d="M9 21v-4"/><path d="M15 21v-4"/></svg></div>
-          <h3>Heggen snoeien</h3>
-          <p>Rechte lijnen en een egale vorm, zodat de heg er weer verzorgd uitziet.</p>
-        </div>
-        <div class="dienst-card reveal">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c3 3 3 7 0 10-3-3-3-7 0-10Z"/><path d="M12 12v10"/><path d="M8 22h8"/></svg></div>
-          <h3>Onkruid verwijderen</h3>
-          <p>Tegels, borders en paden weer onkruidvrij — met de hand, geen gif.</p>
-        </div>
-        <div class="dienst-card reveal">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12s3-8 9-8 9 8 9 8-3 8-9 8-9-8-9-8Z"/><circle cx="12" cy="12" r="2.5"/></svg></div>
-          <h3>Blad ruimen</h3>
-          <p>Paden, gazon en border vrij van blad, netjes afgevoerd of gecomposteerd.</p>
-        </div>
+
+      <div class="diensten-categories">
+        <details class="dienst-category reveal" open>
+          <summary>
+            <span class="cat-title"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12C12 12 4 12 4 5c7 0 8 4 8 7Z"/><path d="M12 12c0 0 8 0 8-7-7 0-8 4-8 7Z"/></svg></span>Tuinonderhoud</span>
+            <span class="cat-count mono">15 diensten</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="dienst-items">
+            <div class="dienst-item"><span class="item-dot"></span>Algemeen tuinonderhoud</div>
+            <div class="dienst-item"><span class="item-dot"></span>Heggen snoeien</div>
+            <div class="dienst-item"><span class="item-dot"></span>Bomen &amp; struiken snoeien</div>
+            <div class="dienst-item"><span class="item-dot"></span>Onkruid verwijderen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Blad ruimen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Gras maaien</div>
+            <div class="dienst-item"><span class="item-dot"></span>Planten &amp; borders verzorgen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Bloemperken onderhouden</div>
+            <div class="dienst-item"><span class="item-dot"></span>Hoog gras en overwoekerde tuinen aanpakken</div>
+            <div class="dienst-item"><span class="item-dot"></span>Tuin opruimen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Kleine tuinwerkzaamheden</div>
+            <div class="dienst-item"><span class="item-dot"></span>Terras en tuinpaden schoonmaken</div>
+            <div class="dienst-item"><span class="item-dot"></span>Plantenbakken onderhouden</div>
+            <div class="dienst-item"><span class="item-dot"></span>Tuin winterklaar maken</div>
+            <div class="dienst-item"><span class="item-dot"></span>Tuin lenteklaar maken</div>
+          </div>
+        </details>
+
+        <details class="dienst-category reveal">
+          <summary>
+            <span class="cat-title"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>Tuin opknappen</span>
+            <span class="cat-count mono">9 diensten</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="dienst-items">
+            <div class="dienst-item"><span class="item-dot"></span>Achterstallig tuinonderhoud</div>
+            <div class="dienst-item"><span class="item-dot"></span>Overwoekerde tuinen opruimen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Struiken uitdunnen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Dode takken verwijderen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Oude planten verwijderen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Nieuwe planten/borders aanleggen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Beplanting vervangen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Grind en losse stenen verspreiden</div>
+            <div class="dienst-item"><span class="item-dot"></span>Tuinafval opruimen en afvoeren</div>
+          </div>
+        </details>
+
+        <details class="dienst-category reveal">
+          <summary>
+            <span class="cat-title"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L2 19v3h3l7.3-7.3a4 4 0 0 0 5.4-5.4l-2.65 2.65a1 1 0 0 1-1.41 0l-1.59-1.59a1 1 0 0 1 0-1.41Z"/></svg></span>Kleine tuinwerkzaamheden</span>
+            <span class="cat-count mono">9 diensten</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="dienst-items">
+            <div class="dienst-item"><span class="item-dot"></span>Kleine schuttingen repareren</div>
+            <div class="dienst-item"><span class="item-dot"></span>Tuinhekjes plaatsen/repareren</div>
+            <div class="dienst-item"><span class="item-dot"></span>Plantenbakken plaatsen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Kleine stukjes bestrating herstellen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Kleine tuinmuurtjes herstellen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Eenvoudig onderhoud aan regenwaterafvoer</div>
+            <div class="dienst-item"><span class="item-dot"></span>Tuinmeubels verplaatsen/opruimen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Tuin klaarmaken voor verkoop/verhuur</div>
+            <div class="dienst-item"><span class="item-dot"></span>Tuin leegruimen bij verhuizing</div>
+          </div>
+        </details>
+
+        <details class="dienst-category reveal">
+          <summary>
+            <span class="cat-title"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg></span>Seizoenswerk</span>
+            <span class="cat-count mono">7 diensten</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="dienst-items">
+            <div class="dienst-item"><span class="item-dot"></span>Voorjaarsbeurt</div>
+            <div class="dienst-item"><span class="item-dot"></span>Zomeronderhoud</div>
+            <div class="dienst-item"><span class="item-dot"></span>Herfstbeurt</div>
+            <div class="dienst-item"><span class="item-dot"></span>Winterklaar maken</div>
+            <div class="dienst-item"><span class="item-dot"></span>Voorjaarssnoei</div>
+            <div class="dienst-item"><span class="item-dot"></span>Bladruimen</div>
+            <div class="dienst-item"><span class="item-dot"></span>Tuin beschermen tegen de winter</div>
+          </div>
+        </details>
       </div>
+
       <p class="dienst-note">Staat jouw klus er niet bij? Vraag het gewoon — we denken graag mee over wat jouw tuin nodig heeft.</p>
     </div>
   </section>
@@ -896,30 +1011,40 @@
         </div>
         <div class="prijs-side reveal">
           <h3>Reken je klus even uit</h3>
-          <p>Kies wat je wil laten doen en de maat van je tuin — je ziet meteen een indicatie.</p>
+          <p>Kies wat er moet gebeuren en hoe groot je tuin is — je ziet meteen een prijsindicatie.</p>
           <div class="calc">
-            <label class="calc-label" for="calcService">Wat wil je laten doen?</label>
-            <select id="calcService" class="calc-select">
-              <option value="maaien">Gras maaien</option>
-              <option value="snoeien">Heg snoeien</option>
-              <option value="onkruid">Onkruid verwijderen</option>
-              <option value="blad">Blad ruimen</option>
-              <option value="aanleggen">Nieuw gras aanleggen</option>
-            </select>
+            <div class="calc-group">
+              <span class="calc-label">Wat moet er gebeuren?</span>
+              <div class="calc-checks" id="calcServices">
+                <label class="calc-check"><input type="checkbox" value="maaien">Gras maaien</label>
+                <label class="calc-check"><input type="checkbox" value="snoeien">Heg snoeien</label>
+                <label class="calc-check"><input type="checkbox" value="bomen">Bomen &amp; struiken snoeien</label>
+                <label class="calc-check"><input type="checkbox" value="onkruid">Onkruid verwijderen</label>
+                <label class="calc-check"><input type="checkbox" value="opruimen">Tuin opruimen</label>
+                <label class="calc-check"><input type="checkbox" value="opknappen">Tuin opknappen</label>
+                <label class="calc-check"><input type="checkbox" value="seizoen">Seizoensbeurt</label>
+                <label class="calc-check calc-check-highlight"><input type="checkbox" value="compleet">Complete onderhoudsbeurt</label>
+                <label class="calc-check"><input type="checkbox" value="anders">Anders</label>
+              </div>
+            </div>
 
-            <label class="calc-label" for="calcSize">
-              <span id="calcSizeLabel">Oppervlak gazon</span>
-              <span id="calcSizeValue" class="mono">100 m²</span>
-            </label>
-            <input type="range" id="calcSize" class="calc-range" min="20" max="400" step="10" value="100">
-            <div class="calc-scale"><span id="calcMinLabel">20 m²</span><span id="calcMaxLabel">400 m²</span></div>
+            <div class="calc-group">
+              <span class="calc-label">Hoe groot is je tuin?</span>
+              <div class="calc-radios" id="calcSizeGroup">
+                <label class="calc-radio"><input type="radio" name="calcSize" value="lt50">&lt; 50 m²</label>
+                <label class="calc-radio"><input type="radio" name="calcSize" value="50-100">50–100 m²</label>
+                <label class="calc-radio"><input type="radio" name="calcSize" value="100-200" checked>100–200 m²</label>
+                <label class="calc-radio"><input type="radio" name="calcSize" value="200-400">200–400 m²</label>
+                <label class="calc-radio"><input type="radio" name="calcSize" value="gt400">&gt; 400 m²</label>
+              </div>
+            </div>
 
             <div class="calc-result">
               <div class="calc-row"><span>Geschatte werktijd</span><span id="calcHours" class="mono">—</span></div>
               <div class="calc-row"><span>Met 3 man op locatie</span><span id="calcOnsite" class="mono">—</span></div>
               <div class="calc-row total"><span>Indicatieprijs</span><span id="calcPrice" class="mono">—</span></div>
             </div>
-            <p class="calc-note" id="calcNote">Inclusief randjes afwerken en grasafval opruimen.</p>
+            <p class="calc-note" id="calcNote">Kies hierboven wat er moet gebeuren.</p>
           </div>
         </div>
       </div>
@@ -1038,82 +1163,154 @@
 
   // Price calculator
   (function(){
-    const RATE = 12.5; // euro per werkuur
+    const RATE = 12.5; // euro per mens-uur
+    const MIN_MINUTES = 30; // minimumklus, ook voor kleine tuinen
 
-    const CONFIG = {
-      maaien:   { unit: 'm² gazon',            label: 'Oppervlak gazon',            min: 20,  max: 400, step: 10, value: 100, minutesPerUnit: 0.45, minMinutes: 30,
-                  note: 'Inclusief randjes afwerken en grasafval opruimen.' },
-      snoeien:  { unit: 'm heglengte',          label: 'Lengte heg',                 min: 5,   max: 100, step: 5,  value: 15,  minutesPerUnit: 4,    minMinutes: 30,
-                  note: 'Snoeiafval nemen we mee of ruimen we netjes op.' },
-      onkruid:  { unit: 'm² bestrating/border', label: 'Oppervlak met onkruid',      min: 10,  max: 200, step: 5,  value: 40,  minutesPerUnit: 1.6,  minMinutes: 30,
-                  note: 'Met de hand, zonder chemische bestrijdingsmiddelen.' },
-      blad:     { unit: 'm² tuin',              label: 'Oppervlak tuin',             min: 20,  max: 400, step: 10, value: 100, minutesPerUnit: 0.6,  minMinutes: 20,
-                  note: 'Blad wordt verzameld en afgevoerd of gecomposteerd.' },
-      aanleggen:{ unit: 'm² nieuw gazon',       label: 'Oppervlak nieuw gazon',      min: 10,  max: 150, step: 5,  value: 40,  minutesPerUnit: 7,    minMinutes: 60,
-                  note: 'Alleen arbeidsloon — graszoden of graszaad reken je apart. We denken graag mee over wat je nodig hebt.' },
+    // Minuten die één persoon nodig heeft per m² tuin
+    const SERVICE_RATES = {
+      maaien:    { label: 'Gras maaien',                   minutesPerM2: 0.45 },
+      snoeien:   { label: 'Heg snoeien',                   minutesPerM2: 0.30 },
+      bomen:     { label: 'Bomen & struiken snoeien',      minutesPerM2: 0.55 },
+      onkruid:   { label: 'Onkruid verwijderen',           minutesPerM2: 0.90 },
+      opruimen:  { label: 'Tuin opruimen',                 minutesPerM2: 1.00 },
+      opknappen: { label: 'Tuin opknappen',                minutesPerM2: 1.80 },
+      seizoen:   { label: 'Seizoensbeurt',                 minutesPerM2: 1.50 },
+    };
+    // "Complete onderhoudsbeurt" = de vier basistaken samen, met een korting voor de combinatie
+    const BASE_TASKS = ['maaien', 'snoeien', 'onkruid', 'opruimen'];
+    const COMPLEET_RATE = BASE_TASKS
+      .reduce((sum, key) => sum + SERVICE_RATES[key].minutesPerM2, 0) * 0.85;
+
+    const SIZE_BUCKETS = {
+      'lt50':     { label: 'kleiner dan 50 m²',  min: 20,  max: 50  },
+      '50-100':   { label: '50–100 m²',          min: 50,  max: 100 },
+      '100-200':  { label: '100–200 m²',         min: 100, max: 200 },
+      '200-400':  { label: '200–400 m²',         min: 200, max: 400 },
+      'gt400':    { label: 'groter dan 400 m²',  min: 400, max: null },
     };
 
-    const serviceEl = document.getElementById('calcService');
-    const sizeEl = document.getElementById('calcSize');
-    const sizeLabelEl = document.getElementById('calcSizeLabel');
-    const sizeValueEl = document.getElementById('calcSizeValue');
-    const minLabelEl = document.getElementById('calcMinLabel');
-    const maxLabelEl = document.getElementById('calcMaxLabel');
+    const serviceBoxes = Array.from(document.querySelectorAll('#calcServices input[type="checkbox"]'));
+    const sizeRadios = Array.from(document.querySelectorAll('#calcSizeGroup input[type="radio"]'));
     const hoursEl = document.getElementById('calcHours');
     const onsiteEl = document.getElementById('calcOnsite');
     const priceEl = document.getElementById('calcPrice');
     const noteEl = document.getElementById('calcNote');
 
-    if(!serviceEl) return;
+    if(!serviceBoxes.length) return;
 
-    function formatHours(h){
-      if(h <= 0) return '0 uur';
-      const rounded = Math.round(h * 4) / 4; // nearest quarter hour
-      const wholePart = Math.floor(rounded);
-      const frac = rounded - wholePart;
+    function formatNum(h){
+      const rounded = Math.round(h * 4) / 4; // op kwartier afronden
+      const whole = Math.floor(rounded);
+      const frac = rounded - whole;
       let fracLabel = '';
       if(Math.abs(frac - 0.25) < 0.01) fracLabel = '¼';
       else if(Math.abs(frac - 0.5) < 0.01) fracLabel = '½';
       else if(Math.abs(frac - 0.75) < 0.01) fracLabel = '¾';
-      const num = wholePart === 0 && fracLabel ? fracLabel : (wholePart + (fracLabel ? ' ' + fracLabel : ''));
-      return '± ' + num + ' uur';
+      if(whole === 0 && fracLabel) return fracLabel;
+      return whole + (fracLabel ? ' ' + fracLabel : '');
     }
 
-    function formatPrice(p){
-      return '€' + p.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    function roundMoney(amount, direction){
+      const step = 2.5;
+      return direction === 'up'
+        ? Math.ceil(amount / step) * step
+        : Math.max(step, Math.floor(amount / step) * step);
+    }
+
+    function formatMoney(amount){
+      return '€' + amount.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function syncCheckedStyles(){
+      serviceBoxes.forEach(box => box.closest('.calc-check').classList.toggle('is-checked', box.checked));
+      sizeRadios.forEach(radio => radio.closest('.calc-radio').classList.toggle('is-checked', radio.checked));
+    }
+
+    function handleCompleetExclusivity(changed){
+      const compleetBox = serviceBoxes.find(b => b.value === 'compleet');
+      const taskBoxes = serviceBoxes.filter(b => b.value !== 'compleet' && b.value !== 'anders');
+      if(changed === compleetBox && compleetBox.checked){
+        taskBoxes.forEach(b => { b.checked = false; });
+      } else if(changed !== compleetBox && taskBoxes.includes(changed) && changed.checked){
+        compleetBox.checked = false;
+      }
     }
 
     function update(){
-      const cfg = CONFIG[serviceEl.value];
+      const checkedValues = serviceBoxes.filter(b => b.checked).map(b => b.value);
+      const andersChecked = checkedValues.includes('anders');
+      const compleetChecked = checkedValues.includes('compleet');
+      const taskValues = checkedValues.filter(v => v !== 'anders' && v !== 'compleet');
 
-      // sync range constraints to the chosen service
-      sizeEl.min = cfg.min;
-      sizeEl.max = cfg.max;
-      sizeEl.step = cfg.step;
-      if(sizeEl.value < cfg.min || sizeEl.value > cfg.max || sizeEl.dataset.service !== serviceEl.value){
-        sizeEl.value = cfg.value;
+      const sizeRadio = sizeRadios.find(r => r.checked) || sizeRadios[0];
+      const bucket = SIZE_BUCKETS[sizeRadio.value];
+
+      let ratePerM2 = 0;
+      let labels = [];
+      if(compleetChecked){
+        ratePerM2 = COMPLEET_RATE;
+        labels.push('Complete onderhoudsbeurt');
+      } else {
+        taskValues.forEach(v => {
+          ratePerM2 += SERVICE_RATES[v].minutesPerM2;
+          labels.push(SERVICE_RATES[v].label);
+        });
       }
-      sizeEl.dataset.service = serviceEl.value;
 
-      sizeLabelEl.textContent = cfg.label;
-      sizeValueEl.textContent = sizeEl.value + ' ' + cfg.unit;
-      minLabelEl.textContent = cfg.min + ' ' + cfg.unit;
-      maxLabelEl.textContent = cfg.max + ' ' + cfg.unit;
-      noteEl.textContent = cfg.note;
+      if(ratePerM2 === 0){
+        hoursEl.textContent = '—';
+        onsiteEl.textContent = '—';
+        priceEl.textContent = '—';
+        noteEl.textContent = andersChecked
+          ? 'Vertel ons gewoon wat je nodig hebt, dan maken we samen een offerte op maat.'
+          : 'Kies hierboven wat er moet gebeuren.';
+        return;
+      }
 
-      const amount = Number(sizeEl.value);
-      const minutes = Math.max(cfg.minMinutes, amount * cfg.minutesPerUnit);
-      const workHours = minutes / 60; // totale mens-uren
-      const onsiteHours = workHours / 3; // met 3 man tegelijk
-      const price = Math.max(RATE, Math.round((workHours * RATE) * 4) / 4);
+      const openEnded = bucket.max === null;
+      let minMinutes = Math.max(MIN_MINUTES, bucket.min * ratePerM2);
+      let maxMinutes = openEnded ? null : Math.max(minMinutes, bucket.max * ratePerM2);
 
-      hoursEl.textContent = formatHours(workHours) + ' (mens-uren)';
-      onsiteEl.textContent = formatHours(onsiteHours);
-      priceEl.textContent = formatPrice(price);
+      const minHours = minMinutes / 60;
+      const maxHours = maxMinutes !== null ? maxMinutes / 60 : null;
+
+      const minPrice = roundMoney(minHours * RATE, 'down');
+      const maxPrice = maxHours !== null ? roundMoney(maxHours * RATE, 'up') : null;
+
+      if(openEnded){
+        hoursEl.textContent = 'vanaf ± ' + formatNum(minHours) + ' uur';
+        onsiteEl.textContent = 'vanaf ± ' + formatNum(minHours / 3) + ' uur';
+        priceEl.textContent = 'vanaf ' + formatMoney(minPrice);
+      } else if(minPrice === maxPrice){
+        hoursEl.textContent = '± ' + formatNum(minHours) + ' uur';
+        onsiteEl.textContent = '± ' + formatNum(minHours / 3) + ' uur';
+        priceEl.textContent = formatMoney(minPrice);
+      } else {
+        hoursEl.textContent = '± ' + formatNum(minHours) + '–' + formatNum(maxHours) + ' uur';
+        onsiteEl.textContent = '± ' + formatNum(minHours / 3) + '–' + formatNum(maxHours / 3) + ' uur';
+        priceEl.textContent = formatMoney(minPrice) + ' – ' + formatMoney(maxPrice);
+      }
+
+      let note = labels.join(', ') + ' · ' + bucket.label + '. Dit is een indicatie, we bevestigen de prijs altijd vooraf.';
+      if(andersChecked) note += ' Extra wensen? Vertel het erbij, dat bespreken we persoonlijk.';
+      noteEl.textContent = note;
     }
 
-    serviceEl.addEventListener('change', update);
-    sizeEl.addEventListener('input', update);
+    serviceBoxes.forEach(box => {
+      box.addEventListener('change', () => {
+        handleCompleetExclusivity(box);
+        syncCheckedStyles();
+        update();
+      });
+    });
+    sizeRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        syncCheckedStyles();
+        update();
+      });
+    });
+
+    syncCheckedStyles();
     update();
   })();
 
@@ -1138,5 +1335,4 @@
 
 </body>
 </html>
-</body>
 </html>
