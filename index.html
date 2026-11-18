@@ -689,38 +689,73 @@
   .waarom-card p{ color: var(--ink-soft); font-size: 0.96rem; }
 
   /* ---------- REVIEWS ---------- */
-  .reviews-empty{
-    background: var(--paper);
-    border: 1px dashed var(--line);
-    border-radius: var(--radius);
-    padding: 56px 24px;
-    text-align: center;
-    max-width: 520px;
+  .reviews-list{
+    display:grid;
+    gap: 24px;
+    max-width: 640px;
     margin: 0 auto;
   }
-  .reviews-empty-icon{
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    background: var(--grass-light);
-    color: var(--forest);
-    display:flex; align-items:center; justify-content:center;
-    margin: 0 auto 20px;
+  .review-card{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 36px 36px 30px;
+    position: relative;
+    box-shadow: 0 10px 30px -18px rgba(22,36,26,0.25);
   }
-  .reviews-empty-icon svg{ width:24px; height:24px; }
-  .reviews-empty-text{
+  .review-card::before{
+    content: "\201C";
+    position:absolute;
+    top: 6px; right: 26px;
     font-family:'Fraunces', serif;
-    font-weight: 600;
-    font-style: italic;
-    font-size: 1.2rem;
-    color: var(--forest);
-    margin: 0 0 10px;
+    font-size: 6rem;
+    line-height: 1;
+    color: var(--grass-light);
+    pointer-events:none;
   }
+  .review-stars{
+    display:flex; gap:4px;
+    color: var(--sun);
+    margin-bottom: 16px;
+  }
+  .review-stars svg{ width:22px; height:22px; }
+  .review-text{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--forest);
+    margin: 0 0 22px;
+    position: relative;
+  }
+  .review-author{
+    display:flex; align-items:center; gap:12px;
+  }
+  .review-avatar{
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: #fff;
+    display:flex; align-items:center; justify-content:center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    flex-shrink:0;
+  }
+  .review-name{ font-weight: 600; color: var(--ink); line-height:1.2; }
+  .review-meta{ font-size: 0.85rem; color: var(--ink-soft); }
   .reviews-note{
-    margin-top: 6px;
+    margin: 28px auto 0;
+    max-width: 640px;
+    text-align:center;
     font-size: 0.9rem;
     color: var(--ink-soft);
   }
   .reviews-note a{ color: var(--forest); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 700px){
+    .review-card{ padding: 28px 22px 24px; }
+    .review-text{ font-size: 1.12rem; }
+  }
 
   /* ---------- OVER ONS ---------- */
   .over-wrap{
@@ -1084,15 +1119,26 @@
       <div class="section-head reveal">
         <span class="kicker">Reviews</span>
         <h2>Wat klanten in Wageningen zeggen</h2>
-        <p>We zijn net begonnen, dus hier staan nog geen reviews — die zetten we hier zodra klanten ze insturen.</p>
+        <p>Eerlijke ervaringen van klanten bij wie we al aan de slag zijn geweest.</p>
       </div>
-      <div class="reviews-empty reveal">
-        <div class="reviews-empty-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg>
-        </div>
-        <p class="reviews-empty-text">Nog geen reviews — wees de eerste!</p>
-        <p class="reviews-note">Ben je klant geweest? Stuur je review naar <a href="mailto:tuinonderhoudwageningenrobin@gmail.com">tuinonderhoudwageningenrobin@gmail.com</a> en we zetten 'm hier bij.</p>
+      <div class="reviews-list">
+        <figure class="review-card reveal" style="margin:0">
+          <div class="review-stars" role="img" aria-label="5 van de 5 sterren">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>
+          </div>
+          <blockquote class="review-text" style="margin:0 0 22px">
+            &ldquo;Ik kan Robin en Stian na een eerste klus bij mij zeker aanraden. Zij zijn 2 positieve jongens die snel en keurig werken.&rdquo;
+          </blockquote>
+          <figcaption class="review-author">
+            <span class="review-avatar" aria-hidden="true">PR</span>
+            <span>
+              <span class="review-name" style="display:block">Paul R.</span>
+              <span class="review-meta">Klant in Wageningen</span>
+            </span>
+          </figcaption>
+        </figure>
       </div>
+      <p class="reviews-note reveal">Ben je ook klant geweest? Stuur je review naar <a href="mailto:tuinonderhoudwageningenrobin@gmail.com">tuinonderhoudwageningenrobin@gmail.com</a> en we zetten 'm hier bij.</p>
     </div>
   </section>
 
