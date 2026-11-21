@@ -1686,6 +1686,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   @media (max-width: 900px){ .ts-map{ height: 360px; } }
   .lg-kad{ background: transparent; border: 2px solid #E5484D; }
   .ts-map .leaflet-control-layers section{ padding: 0; margin: 0; }
+  .ts-map-blocked{ z-index: 500; background: rgba(243,246,238,0.92); line-height: 1.6; }
+  .ts-plan{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 4px; }
+  .ts-plan:empty{ display:none; }
+  .ts-plan > div{ background: var(--grass-light); border-radius: 12px; padding: 10px 12px; }
+  .ts-plan .mono{ display:block; font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--soil); }
+  .ts-plan strong{ font-family:'Fraunces', serif; font-size: 1.05rem; color: var(--forest); }
+  .psr-price small{ display:block; font-family: inherit; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 4px; text-align: right; }
+  .psr-price{ text-align: right; }
+  @media (max-width: 520px){ .ts-plan{ grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
@@ -1728,7 +1737,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <a class="btn btn-ghost" href="#diensten">Bekijk wat wij doen</a>
         </div>
         <div class="hero-meta">
-          <div><span class="num mono">€12,50</span><span class="lbl">per uur, of vast per klus</span></div>
+          <div><span class="num mono">€12,50</span><span class="lbl">per uur per persoon</span></div>
           <div><span class="num mono">3</span><span class="lbl">vaste tuinmannen</span></div>
           <div><span class="num mono">100%</span><span class="lbl">Wageningen &amp; omgeving</span></div>
         </div>
@@ -1739,7 +1748,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         </div>
         <div class="price-chip">
           <div class="amount">€12<span>,50</span></div>
-          <div class="cap">per uur — of een vaste prijs per klus</div>
+          <div class="cap">per persoon per uur — eerlijk en simpel</div>
         </div>
       </div>
     </div>
@@ -1923,27 +1932,27 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div class="wrap">
       <div class="section-head reveal">
         <span class="kicker">Wat kost dat dan</span>
-        <h2>Per uur of per klus: jij kiest</h2>
+        <h2>Eén eerlijk tarief: €12,50 per uur</h2>
       </div>
       <div class="overleg reveal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7M8.5 9h4"/></svg>
-        <p><strong>Alles kan in overleg.</strong> Per uur of per klus, wanneer we komen, wat we wel of niet doen en hoe je betaalt. Alle prijzen hieronder zijn inschattingen: even appen en we spreken samen af wat het wordt.</p>
+        <p><strong>Alles kan in overleg.</strong> Hoeveel uur, met hoeveel man, wanneer we komen, wat we wel of niet doen en hoe je betaalt. De tijden hieronder zijn inschattingen: even appen en we spreken samen af wat het wordt.</p>
       </div>
       <div class="prijs-wrap">
         <div class="price-card reveal">
           <div class="pmodes">
             <div class="pmode">
-              <span class="pmode-k mono">Per uur</span>
+              <span class="pmode-k mono">Ons tarief</span>
               <div class="pmode-p">€12<span>,50</span></div>
-              <p>per persoon per uur. Handig bij doorlopend werk of als je nog niet precies weet wat er moet gebeuren.</p>
+              <p>per persoon per uur. Je betaalt alleen de uren die we echt werken.</p>
             </div>
             <div class="pmode pmode-alt">
-              <span class="pmode-k mono">Per klus</span>
-              <div class="pmode-p"><small>vanaf</small> €25</div>
-              <p>vaste prijs, vooraf afgesproken. Duurt het langer, dan betaal je niet meer. Zoek je klus hieronder.</p>
+              <span class="pmode-k mono">Hoe lang duurt het?</span>
+              <div class="pmode-p"><small>met</small> 1 of 2</div>
+              <p>personen, afhankelijk van de klus. Zoek je klus hieronder, dan zie je hoe lang het ongeveer duurt.</p>
             </div>
           </div>
-          <label class="price-eyebrow mono" for="priceSearch">Zoek je klus · vaste prijs per klus</label>
+          <label class="price-eyebrow mono" for="priceSearch">Zoek je klus · hoe lang duurt het?</label>
           <div class="psearch" id="psearch">
             <svg class="psearch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
             <input id="priceSearch" type="search" autocomplete="off" spellcheck="false"
@@ -1973,17 +1982,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <p class="psr-note" id="psrNote"></p>
             <a class="btn btn-primary psr-btn" id="psrBtn" href="https://wa.me/31643444758" target="_blank" rel="noopener">Vraag deze klus aan via WhatsApp</a>
           </div>
-          <p class="price-min">Minimaal <strong>€25 per bezoek</strong>, dus combineer gerust een paar klussen. Wil je weten wat jouw hele tuin kost? <a href="#tuinscanner">Probeer de tuinscanner</a>.</p>
+          <p class="price-min">We werken minimaal <strong>1 uur per persoon</strong>, dus combineer gerust een paar klussen. Wil je weten wat jouw hele tuin kost? <a href="#tuinscanner">Probeer de tuinscanner</a>.</p>
           <div class="afvoer-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>
             <div>
               <strong>Hoe gaat het met afvoeren?</strong>
-              <p>Groenafval stoppen we eerst in je <strong>groene container</strong>. Is het meer dan dat, dan brengen we het naar het afvalbrengstation aan de Nude. Daar mag je alleen in met de afvalpas van jouw adres, dus <strong>die lenen we dan even van je</strong>. Wegbrengen kost €10 per rit.</p>
+              <p>Groenafval stoppen we eerst in je <strong>groene container</strong>. Is het meer dan dat, dan brengen we het naar het afvalbrengstation aan de Nude. Daar mag je alleen in met de afvalpas van jouw adres, dus <strong>die lenen we dan even van je</strong>. Wegbrengen telt gewoon als werktijd, ongeveer 45 minuten per rit.</p>
             </div>
           </div>
-          <p class="price-desc">Wil je een vaste prijs? Dan komen we gratis kijken en spreken we vooraf één bedrag af. <strong>Duurt het langer dan gedacht, dan betaal je niet meer.</strong> Bijzondere tuin of grote klus? Dan maken we een prijs op maat. <strong>Alles in overleg.</strong></p>
+          <p class="price-desc">We rekenen gewoon per uur: <strong>€12,50 per persoon</strong>. Vooraf komen we gratis kijken en vertellen we hoe lang we denken dat het duurt en met hoeveel man we komen. Na afloop betaal je de echte uren. <strong>Alles in overleg.</strong></p>
           <ul class="price-list">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Gratis langskomen en vaste prijs vooraf, ook via WhatsApp</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Gratis langskomen en vooraf een inschatting van de uren, ook via WhatsApp</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Geen voorrijkosten binnen Wageningen</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Groenafval gaat in je groene container, of we brengen het weg naar het afvalbrengstation met <strong>jouw afvalpas</strong></span></li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Betalen in overleg: tikkie, contant of overboeking</li>
@@ -1992,7 +2001,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         </div>
         <div class="prijs-side reveal">
           <h3>Reken je klus even uit</h3>
-          <p>Kies wat er moet gebeuren en hoe groot je tuin is — je ziet meteen de vaste prijs.</p>
+          <p>Kies wat er moet gebeuren en hoe groot je tuin is — je ziet meteen hoe lang het duurt en met hoeveel man.</p>
           <div class="calc">
             <div class="calc-group">
               <span class="calc-label">Wat moet er gebeuren?</span>
@@ -2022,7 +2031,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
             <div class="calc-result">
               <div id="calcLines"></div>
-              <div class="calc-row total"><span>Vaste prijs</span><span id="calcPrice" class="mono">—</span></div>
+              <div class="calc-row total"><span>Inschatting</span><span id="calcPrice" class="mono">—</span></div>
             </div>
             <p class="calc-note" id="calcNote">Kies hierboven wat er moet gebeuren.</p>
           </div>
@@ -2037,7 +2046,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="section-head reveal">
         <span class="kicker">Tuinscanner</span>
         <h2>Wat kost <em>jouw</em> tuin?</h2>
-        <p>Vul je adres in. We pakken de kadastrale kaart erbij, halen je huis eraf en rekenen uit hoeveel m² tuin je hebt. Daarna zie je meteen wat de klussen ongeveer kosten.</p>
+        <p>Vul je adres in. We pakken de kadastrale kaart erbij, halen je huis eraf en rekenen uit hoeveel m² tuin je hebt. Daarna zie je hoe lang de klussen ongeveer duren, met hoeveel man we komen en wat dat kost bij €12,50 per uur.</p>
       </div>
       <div class="ts-grid reveal">
         <div class="ts-left">
@@ -2087,6 +2096,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
           <div class="calc-result">
             <div id="tsLines"></div>
+            <div class="ts-plan" id="tsPlan"></div>
             <div class="calc-row total"><span>Inschatting</span><span id="tsPrice" class="mono">—</span></div>
           </div>
           <p class="calc-note" id="tsNote"></p>
@@ -2235,41 +2245,53 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }));
   })();
 
-  // Prijs-zoekbalk met suggesties
+  // ------------------------------------------------------------------
+  // Inschatting: hoe lang duurt het en met hoeveel mensen? (€12,50 p.p. per uur)
+  // ph = persoonsuren (totaal werk). Tot 1,5 uur komt er 1 persoon, daarboven 2.
+  // ------------------------------------------------------------------
+  const UURTARIEF = 12.5;
+  function plan(ph){
+    const people = ph <= 1.5 ? 1 : 2;
+    const billed = Math.max(ph, people);             // minimaal 1 uur per persoon
+    return { ph, people, dur: ph / people, cost: billed * UURTARIEF };
+  }
+  const fmtDur = d => { const r = Math.max(0.5, Math.round(d * 2) / 2); return r === 0.5 ? '± 30 min' : '± ' + String(r).replace('.', ',') + ' uur'; };
+  const fmtPeople = n => n === 1 ? '1 persoon' : n + ' personen';
+  const fmtCost = c => { const v = Math.round(c / 2.5) * 2.5; return '± €' + v.toLocaleString('nl-NL', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
+  window.TuinPlan = { plan, fmtDur, fmtPeople, fmtCost, UURTARIEF };
+
+  // Zoekbalk met suggesties
   (function(){
     const input = document.getElementById('priceSearch');
     if(!input) return;
     const list = document.getElementById('psList');
-    const box = document.getElementById('psearch');
     const res = document.getElementById('psResult');
-    const MIN = 25, WA = 'https://wa.me/31643444758';
+    const WA = 'https://wa.me/31643444758';
     const SIZES = [
-      { key:'klein',  name:'kleine tuin',  range:'tot 50 m²',   max:50 },
+      { key:'klein',  name:'kleine tuin',      range:'tot 50 m²', max:50 },
       { key:'middel', name:'middelgrote tuin', range:'50–150 m²', max:150 },
-      { key:'groot',  name:'grote tuin',   range:'150 m²+',     max:Infinity },
+      { key:'groot',  name:'grote tuin',       range:'150 m²+',   max:Infinity },
     ];
-    const eur = n => '€' + n.toLocaleString('nl-NL', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
-    const withMin = n => Math.max(MIN, n);
     const sizeFor = m2 => SIZES.find(s => m2 <= s.max);
-    // g: true = er komt groenafval bij kijken (afvoeren met de afvalpas van de klant)
+    // ph = persoonsuren per tuingrootte; per = persoonsuren per eenheid
     const TASKS = [
-      { label:'Blad ruimen', words:['blad','bladeren','blaadjes','herfst','harken','bladruimen'], prices:{klein:30, middel:55, groot:95}, g:true },
-      { label:'Gras maaien + randen', words:['gras','maaien','gazon','grasmaaien','randen'], prices:{klein:20, middel:30, groot:50}, g:true },
-      { label:'Onkruid wieden (borders)', words:['onkruid','wieden','border','borders','perken'], prices:{klein:30, middel:55, groot:95}, g:true },
-      { label:'Terras / tegels: onkruid uit de voegen', words:['tegels','terras','voegen','voeg','oprit','pad','paden','bestrating'], perM2:1.5, unitM2:'m² bestrating', g:true },
-      { label:'Heg snoeien', words:['heg','haag','heggen','snoeien','coniferen','conifeer'], perMeter:3, g:true },
-      { label:'Struiken snoeien', words:['struik','struiken','snoeien','rozen','bosjes'], perPiece:7, unit:'struik', units:'struiken', g:true },
-      { label:'Kleine boom snoeien (tot ± 4 m)', words:['boom','bomen','fruitboom','snoeien','takken'], perPiece:30, unit:'boom', units:'bomen', g:true },
-      { label:'Tuin opruimen', words:['opruimen','opruim','rommel','troep','schoonmaken','tuin'], prices:{klein:30, middel:55, groot:95}, g:true },
-      { label:'Tuin winterklaar maken', words:['winter','winterklaar','najaar','herfst','najaarsbeurt'], prices:{klein:50, middel:90, groot:145}, g:true },
-      { label:'Voorjaarsbeurt', words:['voorjaar','lente','voorjaarsbeurt','voorjaarssnoei'], prices:{klein:50, middel:90, groot:145}, g:true },
-      { label:'Complete onderhoudsbeurt', words:['compleet','complete','onderhoud','onderhoudsbeurt','alles','beurt'], prices:{klein:60, middel:100, groot:160}, g:true },
-      { label:'Tuin klaarmaken voor verkoop/verhuur', words:['verkoop','verhuur','verhuizen','verhuizing','makelaar','huurder'], prices:{klein:60, middel:100, groot:160}, g:true },
-      { label:'Dakgoot leeghalen', words:['dakgoot','goot','dakgoten','regenpijp'], fixed:35, unit:'per huis', g:true },
-      { label:'Planten of bloembollen poten', words:['planten','plant','bollen','bloembollen','poten','bloemen'], from:25 },
-      { label:'Kleine reparatie bestrating', words:['bestrating','tegel','tegels','stoep','herstellen','reparatie','losse'], from:30 },
-      { label:'Klein tuinmuurtje herstellen', words:['muur','muurtje','tuinmuur','herstellen'], from:30 },
-      { label:'Groenafval wegbrengen (met jouw afvalpas)', words:['afvoeren','afvoer','rit','ritten','wegbrengen','stort','milieustraat','afvalbrengstation','groenafval','tuinafval','afval','container'], perPiece:10, unit:'rit', units:'ritten', noMin:true, note:'Komt bovenop je klus. We brengen het naar het afvalbrengstation aan de Nude met jouw afvalpas.' },
+      { label:'Blad ruimen', words:['blad','bladeren','blaadjes','herfst','harken','bladruimen'], ph:{klein:2, middel:4, groot:7}, g:true },
+      { label:'Gras maaien + randen', words:['gras','maaien','gazon','grasmaaien','randen'], ph:{klein:1, middel:2, groot:3.5}, g:true },
+      { label:'Onkruid wieden (borders)', words:['onkruid','wieden','border','borders','perken'], ph:{klein:2, middel:4, groot:7}, g:true },
+      { label:'Terras / tegels: onkruid uit de voegen', words:['tegels','terras','voegen','voeg','oprit','pad','paden','bestrating'], perM2:1/9, unitM2:'m² bestrating', g:true },
+      { label:'Heg snoeien', words:['heg','haag','heggen','snoeien','coniferen','conifeer'], perMeter:2/9, g:true },
+      { label:'Struiken snoeien', words:['struik','struiken','snoeien','rozen','bosjes'], perPiece:0.5, unit:'struik', units:'struiken', g:true },
+      { label:'Kleine boom snoeien (tot ± 4 m)', words:['boom','bomen','fruitboom','snoeien','takken'], perPiece:2, unit:'boom', units:'bomen', g:true },
+      { label:'Tuin opruimen', words:['opruimen','opruim','rommel','troep','schoonmaken','tuin'], ph:{klein:2, middel:4, groot:7}, g:true },
+      { label:'Tuin winterklaar maken', words:['winter','winterklaar','najaar','herfst','najaarsbeurt'], ph:{klein:3.5, middel:6.5, groot:10.5}, g:true },
+      { label:'Voorjaarsbeurt', words:['voorjaar','lente','voorjaarsbeurt','voorjaarssnoei'], ph:{klein:3.5, middel:6.5, groot:10.5}, g:true },
+      { label:'Complete onderhoudsbeurt', words:['compleet','complete','onderhoud','onderhoudsbeurt','alles','beurt'], ph:{klein:4, middel:7, groot:11.5}, g:true },
+      { label:'Tuin klaarmaken voor verkoop/verhuur', words:['verkoop','verhuur','verhuizen','verhuizing','makelaar','huurder'], ph:{klein:4, middel:7, groot:11.5}, g:true },
+      { label:'Dakgoot leeghalen', words:['dakgoot','goot','dakgoten','regenpijp'], fixed:2.5, unit:'per huis', g:true },
+      { label:'Planten of bloembollen poten', words:['planten','plant','bollen','bloembollen','poten','bloemen'], fixed:2, unit:'hangt af van hoeveel', from:true },
+      { label:'Kleine reparatie bestrating', words:['bestrating','tegel','tegels','stoep','herstellen','reparatie','losse'], fixed:2.5, unit:'na een kijkje', from:true },
+      { label:'Klein tuinmuurtje herstellen', words:['muur','muurtje','tuinmuur','herstellen'], fixed:3, unit:'na een kijkje', from:true },
+      { label:'Groenafval wegbrengen (met jouw afvalpas)', words:['afvoeren','afvoer','rit','ritten','wegbrengen','stort','milieustraat','afvalbrengstation','groenafval','tuinafval','afval','container'], perPiece:0.75, unit:'rit', units:'ritten', note:'We brengen het naar het afvalbrengstation aan de Nude met jouw afvalpas.' },
     ];
     const STOP = ['m','m2','meter','vierkante','bij','van','de','het','een','mijn','met','en','voor','laten','graag','wil','ik','stuks','stuk','x'];
 
@@ -2280,7 +2302,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       if(num){ n = parseFloat(num[1]); unit = num[2] || ''; }
       const words = q.replace(/[\d.,²]+/g,' ').split(/\s+/).filter(w => w.length > 1 && !STOP.includes(w));
       const score = t => words.filter(w => t.words.some(k => k.startsWith(w) || (w.length > 3 && w.startsWith(k)))).length;
-      let tasks = words.length
+      const tasks = words.length
         ? TASKS.map(t => [t, score(t)]).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]).map(x => x[0])
         : TASKS.filter(t => ['Blad ruimen','Gras maaien + randen','Heg snoeien','Tuin winterklaar maken','Complete onderhoudsbeurt','Dakgoot leeghalen'].includes(t.label));
       return { tasks, n, unit, hasWords: words.length > 0 };
@@ -2292,26 +2314,22 @@ svg.leaflet-image-layer.leaflet-interactive path {
       const isLen = /meter|m/.test(unit) || (n && !unit);
       const many = hasWords && tasks.length <= 2;
       const out = [];
+      const add = (t, sub, ph, extra) => out.push(Object.assign({ task:t, label:t.label, sub, p: plan(ph) }, extra || {}));
       tasks.forEach(t => {
-        if(t.prices){
+        if(t.ph){
           if(n && isArea){
             const s = sizeFor(n);
-            out.push({ task:t, label:t.label, sub: Math.round(n) + ' m² · ' + s.name, price: withMin(t.prices[s.key]), from: s.key === 'groot',
-              note: n > 300 ? 'Voor zo\'n grote tuin maken we na een kijkje een prijs op maat.' : '' });
-          } else (many ? SIZES : [SIZES[1]]).forEach(s => out.push({ task:t, label:t.label, sub: s.name + ', ' + s.range, price: withMin(t.prices[s.key]), from: s.key === 'groot' }));
+            add(t, Math.round(n) + ' m² · ' + s.name, t.ph[s.key], { from: s.key === 'groot', note: n > 300 ? 'Bij zo\'n grote tuin kijken we eerst even hoe lang het echt duurt.' : '' });
+          } else (many ? SIZES : [SIZES[1]]).forEach(s => add(t, s.name + ', ' + s.range, t.ph[s.key], { from: s.key === 'groot' }));
         } else if(t.perMeter){
-          (n && isLen ? [Math.round(n)] : many ? [5, 10, 20] : [10]).forEach(m =>
-            out.push({ task:t, label:t.label, sub: m + ' meter · ' + eur(t.perMeter) + ' per meter', price: withMin(m * t.perMeter) }));
+          (n && isLen ? [Math.round(n)] : many ? [5, 10, 20] : [10]).forEach(m => add(t, m + ' meter heg', m * t.perMeter));
         } else if(t.perM2){
-          (n && isArea ? [Math.round(n)] : many ? [10, 25, 50] : [25]).forEach(m =>
-            out.push({ task:t, label:t.label, sub: m + ' ' + t.unitM2 + ' · ' + eur(t.perM2) + ' per m²', price: withMin(m * t.perM2) }));
+          (n && isArea ? [Math.round(n)] : many ? [10, 25, 50] : [25]).forEach(m => add(t, m + ' ' + t.unitM2, m * t.perM2));
         } else if(t.perPiece){
           (n && !/m²|m2|vierkante|vk|meter|^m$/.test(unit) ? [Math.round(n)] : many ? [1, 3, 5] : [1]).forEach(k =>
-            out.push({ task:t, label:t.label, sub: k + ' ' + (k === 1 ? t.unit : t.units) + ' · ' + eur(t.perPiece) + ' per ' + t.unit, price: t.noMin ? k * t.perPiece : withMin(k * t.perPiece), note: t.note || '' }));
+            add(t, k + ' ' + (k === 1 ? t.unit : t.units), k * t.perPiece, { note: t.note || '' }));
         } else if(t.fixed){
-          out.push({ task:t, label:t.label, sub: t.unit, price: withMin(t.fixed) });
-        } else if(t.from){
-          out.push({ task:t, label:t.label, sub: 'prijs na een kijkje', price: t.from, from: true });
+          add(t, t.unit, t.fixed, { from: !!t.from });
         }
       });
       return out.slice(0, 10);
@@ -2332,9 +2350,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
         li.setAttribute('role','option'); li.id = 'ps-opt-' + i;
         const left = document.createElement('div');
         left.textContent = it.label;
-        const sm = document.createElement('small'); sm.textContent = it.sub; left.append(sm);
+        const sm = document.createElement('small');
+        sm.textContent = it.sub + ' · ' + (it.from ? 'vanaf ' : '') + fmtDur(it.p.dur) + ' met ' + fmtPeople(it.p.people);
+        left.append(sm);
         const right = document.createElement('span'); right.className = 'pp';
-        right.textContent = (it.from ? 'vanaf ' : '') + eur(it.price);
+        right.textContent = fmtCost(it.p.cost);
         li.append(left, right);
         li.addEventListener('mousedown', e => { e.preventDefault(); choose(i); });
         list.append(li);
@@ -2349,14 +2369,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
     function choose(i){
       const it = items[i]; if(!it) return;
+      const p = it.p;
       document.getElementById('psrLabel').textContent = it.label + ' · ' + it.sub;
-      document.getElementById('psrPrice').innerHTML = (it.from ? '<small>vanaf</small>' : '') + eur(it.price);
-      let note = 'Dit is een inschatting. We komen gratis kijken en daarna is alles in overleg.';
-      if(it.price === MIN) note = 'Minimumprijs per bezoek is ' + eur(MIN) + '. ' + note;
+      document.getElementById('psrPrice').innerHTML = '<small>' + (it.from ? 'vanaf ' : '') + fmtDur(p.dur) + ' · ' + fmtPeople(p.people) + '</small>' + fmtCost(p.cost);
+      let note = 'Ongeveer ' + String(Math.round(p.ph * 2) / 2).replace('.', ',') + ' uur werk in totaal, à €12,50 per persoon per uur. Je betaalt de echte uren; dit is alleen een inschatting. Alles in overleg.';
       if(it.note) note = it.note + ' ' + note;
       if(it.task.g) note += ' Groenafval gaat in je groene container, of we brengen het weg met jouw afvalpas.';
       document.getElementById('psrNote').textContent = note;
-      const msg = 'Hoi Robin en Stian! Ik wil graag: ' + it.label + ', ' + it.sub + ', inschatting ' + (it.from ? 'vanaf ' : '') + eur(it.price) + '. Wanneer kunnen jullie komen kijken?';
+      const msg = 'Hoi Robin en Stian! Ik wil graag: ' + it.label + ', ' + it.sub + '. Inschatting ' + fmtDur(p.dur) + ' met ' + fmtPeople(p.people) + ' (' + fmtCost(p.cost) + '). Wanneer kunnen jullie komen kijken?';
       document.getElementById('psrBtn').href = WA + '?text=' + encodeURIComponent(msg);
       res.hidden = false;
       open(false);
@@ -2365,7 +2385,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     input.addEventListener('focus', render);
     input.addEventListener('blur', () => setTimeout(() => open(false), 120));
     input.addEventListener('keydown', e => {
-      if(list.hidden && (e.key === 'ArrowDown')){ render(); return; }
+      if(list.hidden && e.key === 'ArrowDown'){ render(); return; }
       if(e.key === 'ArrowDown'){ e.preventDefault(); highlight(Math.min(items.length - 1, active + 1)); }
       else if(e.key === 'ArrowUp'){ e.preventDefault(); highlight(Math.max(0, active - 1)); }
       else if(e.key === 'Enter'){ e.preventDefault(); choose(active >= 0 ? active : 0); }
@@ -2376,18 +2396,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }));
   })();
 
-  // Price calculator — vaste prijzen per klus
+  // Rekenmachine — hoe lang duurt het en met hoeveel mensen?
   (function(){
-    const MIN_PRICE = 25;      // minimum per bezoek
-    const HEG_PER_M = 3;       // heg snoeien, per meter
-    const DAKGOOT = 35;        // dakgoot leeghalen, per huis
-    const SIZE_PRICES = {
-      blad:    { label: 'Blad ruimen', klein: 30, middel: 55, groot: 95 },
-      maaien:  { label: 'Gras maaien + randen',   klein: 20, middel: 30, groot: 50 },
-      onkruid: { label: 'Onkruid wieden',         klein: 30, middel: 55, groot: 95 },
+    const HEG_PER_M = 2/9;   // persoonsuren per meter heg
+    const DAKGOOT = 2.5;     // persoonsuren
+    const SIZE_PH = {
+      blad:    { label: 'Blad ruimen',          klein: 2, middel: 4, groot: 7 },
+      maaien:  { label: 'Gras maaien + randen', klein: 1, middel: 2, groot: 3.5 },
+      onkruid: { label: 'Onkruid wieden',       klein: 2, middel: 4, groot: 7 },
     };
     const SIZE_LABELS = { klein: 'klein (tot 50 m²)', middel: 'middel (50–150 m²)', groot: 'groot (150 m²+)' };
-
     const serviceBoxes = Array.from(document.querySelectorAll('#calcServices input[type="checkbox"]'));
     const sizeRadios = Array.from(document.querySelectorAll('#calcSizeGroup input[type="radio"]'));
     const hegGroup = document.getElementById('calcHegGroup');
@@ -2396,58 +2414,42 @@ svg.leaflet-image-layer.leaflet-interactive path {
     const priceEl = document.getElementById('calcPrice');
     const noteEl = document.getElementById('calcNote');
     if(!serviceBoxes.length) return;
-
-    const money = (n) => '€' + n.toLocaleString('nl-NL', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+    const hrs = h => String(Math.round(h * 2) / 2 || 0.5).replace('.', ',') + ' uur';
 
     function syncCheckedStyles(){
       serviceBoxes.forEach(b => b.closest('.calc-check').classList.toggle('is-checked', b.checked));
       sizeRadios.forEach(r => r.closest('.calc-radio').classList.toggle('is-checked', r.checked));
     }
-
     function update(){
       const chosen = serviceBoxes.filter(b => b.checked).map(b => b.value);
       const size = (sizeRadios.find(r => r.checked) || sizeRadios[1]).value;
       hegGroup.hidden = !chosen.includes('heg');
-
       const lines = [];
       chosen.forEach(v => {
-        if(SIZE_PRICES[v]) lines.push([SIZE_PRICES[v].label, SIZE_PRICES[v][size], size === 'groot']);
-        if(v === 'heg'){
-          const m = Math.max(1, Math.round(Number(hegInput.value) || 0));
-          lines.push(['Heg snoeien · ' + m + ' m', m * HEG_PER_M, false]);
-        }
-        if(v === 'dakgoot') lines.push(['Dakgoot leeghalen', DAKGOOT, false]);
+        if(SIZE_PH[v]) lines.push([SIZE_PH[v].label, SIZE_PH[v][size]]);
+        if(v === 'heg'){ const m = Math.max(1, Math.round(Number(hegInput.value) || 0)); lines.push(['Heg snoeien · ' + m + ' m', m * HEG_PER_M]); }
+        if(v === 'dakgoot') lines.push(['Dakgoot leeghalen', DAKGOOT]);
       });
-
       linesEl.innerHTML = '';
-      lines.forEach(([label, amount, from]) => {
-        const row = document.createElement('div');
-        row.className = 'calc-row';
+      lines.forEach(([label, ph]) => {
+        const row = document.createElement('div'); row.className = 'calc-row';
         const l = document.createElement('span'); l.textContent = label;
-        const r = document.createElement('span'); r.className = 'mono'; r.textContent = (from ? 'vanaf ' : '') + money(amount);
+        const r = document.createElement('span'); r.className = 'mono'; r.textContent = hrs(ph) + ' werk';
         row.append(l, r); linesEl.append(row);
       });
-
       if(!lines.length){
         priceEl.textContent = '—';
         noteEl.textContent = chosen.includes('anders')
-          ? 'Vertel ons gewoon wat je nodig hebt, dan maken we samen een prijs op maat.'
+          ? 'Vertel ons gewoon wat je nodig hebt, dan schatten we samen in hoe lang het duurt.'
           : 'Kies hierboven wat er moet gebeuren.';
         return;
       }
-
-      let total = lines.reduce((sum, l) => sum + l[1], 0);
-      const raisedToMin = total < MIN_PRICE;
-      if(raisedToMin) total = MIN_PRICE;
-      const isFrom = lines.some(l => l[2]);
-      priceEl.textContent = (isFrom ? 'vanaf ' : '') + money(total);
-
-      let note = 'Tuin: ' + SIZE_LABELS[size] + '. We komen altijd eerst gratis kijken en bevestigen de vaste prijs vooraf.';
-      if(raisedToMin) note = 'De minimumprijs per bezoek is ' + money(MIN_PRICE) + '. ' + note;
+      const p = plan(lines.reduce((s, l) => s + l[1], 0));
+      priceEl.textContent = fmtCost(p.cost);
+      let note = fmtDur(p.dur) + ' met ' + fmtPeople(p.people) + ' (' + hrs(p.ph) + ' werk à €12,50 per persoon). Tuin: ' + SIZE_LABELS[size] + '. Je betaalt de echte uren; dit is een inschatting. Alles in overleg.';
       if(chosen.includes('anders')) note += ' Iets anders erbij? Vertel het ons, dan rekenen we het mee.';
       noteEl.textContent = note;
     }
-
     serviceBoxes.forEach(b => b.addEventListener('change', () => { syncCheckedStyles(); update(); }));
     sizeRadios.forEach(r => r.addEventListener('change', () => { syncCheckedStyles(); update(); }));
     hegInput.addEventListener('input', update);
@@ -2489,28 +2491,36 @@ svg.leaflet-image-layer.leaflet-interactive path {
   'use strict';
 
   // ------------------------------------------------------------------
-  // PRIJZEN (in euro's). Klein = 50 m², middel = 150 m², groot = 250 m².
-  // Daartussen rekent de scanner het naar verhouding uit.
+  // INSCHATTING IN PERSOONSUREN (totaal werk). Klein = 50 m², middel = 150 m²,
+  // groot = 250 m²; daartussen rekent de scanner het naar verhouding uit.
+  // Prijs = persoonsuren × €12,50. Tot 1,5 uur werk komt er 1 persoon, daarboven 2.
   // ------------------------------------------------------------------
-  const MIN_PRICE = 25;          // minimum per bezoek
   const UURTARIEF = 12.5;        // per persoon per uur
   const WA = 'https://wa.me/31643444758';
 
   const SIZE_TASKS = {
-    blad:      { label: 'Blad ruimen',              klein: 30, middel: 55,  groot: 95 },
-    maaien:    { label: 'Gras maaien + randen',     klein: 20, middel: 30,  groot: 50 },
-    onkruid:   { label: 'Onkruid wieden (borders)', klein: 30, middel: 55,  groot: 95 },
-    opruimen:  { label: 'Tuin opruimen',            klein: 30, middel: 55,  groot: 95 },
-    winter:    { label: 'Tuin winterklaar maken',   klein: 50, middel: 90,  groot: 145 },
-    compleet:  { label: 'Complete onderhoudsbeurt', klein: 60, middel: 100, groot: 160 },
+    blad:      { label: 'Blad ruimen',              klein: 2,   middel: 4,   groot: 7 },
+    maaien:    { label: 'Gras maaien + randen',     klein: 1,   middel: 2,   groot: 3.5 },
+    onkruid:   { label: 'Onkruid wieden (borders)', klein: 2,   middel: 4,   groot: 7 },
+    opruimen:  { label: 'Tuin opruimen',            klein: 2,   middel: 4,   groot: 7 },
+    winter:    { label: 'Tuin winterklaar maken',   klein: 3.5, middel: 6.5, groot: 10.5 },
+    compleet:  { label: 'Complete onderhoudsbeurt', klein: 4,   middel: 7,   groot: 11.5 },
   };
   const EXTRA_TASKS = {
-    terras:  { label: 'Terras / voegen onkruidvrij', per: 1.5, unit: 'm²',     input: 'tsTerras' },
-    heg:     { label: 'Heg snoeien',                 per: 3,   unit: 'meter',  input: 'tsHeg' },
-    struik:  { label: 'Struiken snoeien',            per: 7,   unit: 'struik', units: 'struiken', input: 'tsStruik' },
-    dakgoot: { label: 'Dakgoot leeghalen',           fixed: 35 },
-    afvoer:  { label: 'Groenafval wegbrengen',       per: 10,  unit: 'rit', units: 'ritten', input: 'tsAfvoer', noMin: true },
+    terras:  { label: 'Terras / voegen onkruidvrij', per: 1 / 9, unit: 'm²',     input: 'tsTerras' },
+    heg:     { label: 'Heg snoeien',                 per: 2 / 9, unit: 'meter',  input: 'tsHeg' },
+    struik:  { label: 'Struiken snoeien',            per: 0.5,   unit: 'struik', units: 'struiken', input: 'tsStruik' },
+    dakgoot: { label: 'Dakgoot leeghalen',           fixed: 2.5 },
+    afvoer:  { label: 'Groenafval wegbrengen',       per: 0.75,  unit: 'rit', units: 'ritten', input: 'tsAfvoer' },
   };
+  function plan(ph) {
+    const people = ph <= 1.5 ? 1 : 2;
+    return { ph, people, dur: ph / people, cost: Math.max(ph, people) * UURTARIEF };
+  }
+  const hrs = (h) => String(Math.max(0.5, Math.round(h * 2) / 2)).replace('.', ',') + ' uur';
+  const fmtDur = (d) => { const r = Math.max(0.5, Math.round(d * 2) / 2); return r === 0.5 ? '± 30 min' : '± ' + String(r).replace('.', ',') + ' uur'; };
+  const fmtPeople = (n) => n === 1 ? '1 persoon' : n + ' personen';
+  const fmtCost = (c) => { const v = Math.round(c / 2.5) * 2.5; return '± €' + v.toLocaleString('nl-NL', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
 
   // PDOK endpoints (gratis, open data, geen sleutel nodig)
   const LS  = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1';
@@ -2531,8 +2541,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
   const areaInput = $('tsArea');
   const state = { address: null, gemeente: null, parcelM2: null, buildingM2: null };
 
-  const eur = (n) => '€' + n.toLocaleString('nl-NL', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
-  const round5 = (n) => Math.round(n / 5) * 5;
   const m2 = (n) => Math.round(n).toLocaleString('nl-NL') + ' m²';
 
   function setStatus(msg, kind) {
@@ -2540,8 +2548,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     status.className = 'ts-status' + (kind ? ' is-' + kind : '');
   }
 
-  // Prijs voor een klus op basis van tuinoppervlak (vloeiend tussen klein/middel/groot)
-  function sizePrice(t, a) {
+  // Persoonsuren voor een klus op basis van tuinoppervlak (vloeiend tussen klein/middel/groot)
+  function sizeHours(t, a) {
     if (a <= 50) return Math.max(t.klein * Math.max(0.7, a / 50), 0);
     if (a <= 150) return t.klein + (t.middel - t.klein) * (a - 50) / 100;
     if (a <= 250) return t.middel + (t.groot - t.middel) * (a - 150) / 100;
@@ -2579,6 +2587,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
     fallback(luchtfoto, kaart);
     fallback(kaart, osm);
+    let osmOk = 0, osmBad = 0;
+    osm.on('tileload', () => { osmOk++; });
+    osm.on('tileerror', () => {
+      osmBad++;
+      if (!osmOk && osmBad === 4) {
+        const m = document.createElement('div');
+        m.className = 'ts-map-empty ts-map-blocked';
+        m.innerHTML = 'De kaart kan hier niet laden.<br>Open de website gewoon in je browser (Chrome, Edge, Safari) of via GitHub Pages.<br>Je kunt je tuin ook hiernaast zelf in m² invullen.';
+        $('tsMap').append(m);
+      }
+    });
     L.control.layers({ 'Luchtfoto': luchtfoto, 'Kaart': kaart, 'OpenStreetMap': osm }, { 'Kadastrale grenzen': kadaster }, { collapsed: false, position: 'topright' }).addTo(map);
     layers = L.layerGroup().addTo(map);
     setTimeout(() => map.invalidateSize(), 400);
@@ -2780,48 +2799,44 @@ svg.leaflet-image-layer.leaflet-interactive path {
     chosen.forEach((v) => {
       if (SIZE_TASKS[v]) {
         if (!a) return;
-        lines.push([SIZE_TASKS[v].label + ' · ' + m2(a), round5(sizePrice(SIZE_TASKS[v], a)), false]);
+        lines.push([SIZE_TASKS[v].label + ' · ' + m2(a), sizeHours(SIZE_TASKS[v], a)]);
       } else if (EXTRA_TASKS[v]) {
         const t = EXTRA_TASKS[v];
-        if (t.fixed) { lines.push([t.label, t.fixed, false]); return; }
+        if (t.fixed) { lines.push([t.label, t.fixed]); return; }
         const n = Math.max(1, Math.round(Number($(t.input).value) || 0));
-        lines.push([t.label + ' · ' + n + ' ' + (n === 1 ? t.unit : (t.units || t.unit)), n * t.per, !!t.noMin]);
+        lines.push([t.label + ' · ' + n + ' ' + (n === 1 ? t.unit : (t.units || t.unit)), n * t.per]);
       }
     });
 
     const out = $('tsLines'); out.innerHTML = '';
-    lines.forEach(([label, amount]) => {
+    lines.forEach(([label, ph]) => {
       const row = document.createElement('div'); row.className = 'calc-row';
       const l = document.createElement('span'); l.textContent = label;
-      const r = document.createElement('span'); r.className = 'mono'; r.textContent = eur(amount);
+      const r = document.createElement('span'); r.className = 'mono'; r.textContent = hrs(ph) + ' werk';
       row.append(l, r); out.append(row);
     });
 
-    const priceEl = $('tsPrice'), note = $('tsNote'), btn = $('tsBtn');
+    const priceEl = $('tsPrice'), note = $('tsNote'), btn = $('tsBtn'), planEl = $('tsPlan');
     if (!lines.length) {
       priceEl.textContent = '—';
+      planEl.innerHTML = '';
       note.textContent = !a && chosen.some((v) => SIZE_TASKS[v])
         ? 'Zoek eerst je adres, of vul hierboven zelf je tuin in m² in.'
         : 'Kies wat er moet gebeuren.';
       btn.href = WA;
       return;
     }
-    const base = lines.filter((l) => !l[2]).reduce((s, l) => s + l[1], 0);
-    const extra = lines.filter((l) => l[2]).reduce((s, l) => s + l[1], 0);
-    const raised = base > 0 && base < MIN_PRICE;
-    const total = (base > 0 ? Math.max(MIN_PRICE, base) : 0) + extra;
-    priceEl.textContent = eur(total);
-
-    const hours = total / (2 * UURTARIEF);
-    let n = 'Ongeveer ' + (Math.round(hours * 2) / 2).toLocaleString('nl-NL') + ' uur werk met z\'n tweeën. ';
-    if (raised) n += 'Minimumprijs per bezoek is ' + eur(MIN_PRICE) + '. ';
-    n += 'Dit is een inschatting: we komen gratis kijken en daarna is alles in overleg, ook per uur (' + eur(UURTARIEF) + ' p.p.).';
-    note.textContent = n;
+    const p = plan(lines.reduce((s, l) => s + l[1], 0));
+    priceEl.textContent = fmtCost(p.cost);
+    planEl.innerHTML = '<div><span class="mono">Hoe lang</span><strong>' + fmtDur(p.dur) + '</strong></div>' +
+      '<div><span class="mono">Met</span><strong>' + fmtPeople(p.people) + '</strong></div>' +
+      '<div><span class="mono">Werk totaal</span><strong>' + hrs(p.ph) + '</strong></div>';
+    note.textContent = 'Je betaalt €12,50 per persoon per uur, voor de echte uren. Dit is een inschatting: we komen gratis kijken en daarna is alles in overleg.';
 
     const msg = 'Hoi Robin en Stian! ' + (state.address ? 'Adres: ' + state.address + '. ' : '') +
       (a ? 'Tuin ± ' + Math.round(a) + ' m². ' : '') +
-      'Ik wil graag: ' + lines.map((l) => l[0].replace(' · ' + m2(a), '') + ' (' + eur(l[1]) + ')').join(', ') +
-      '. Inschatting totaal ' + eur(total) + '. Wanneer kunnen jullie komen kijken?';
+      'Ik wil graag: ' + lines.map((l) => l[0].replace(' · ' + m2(a), '')).join(', ') +
+      '. Inschatting: ' + fmtDur(p.dur) + ' met ' + fmtPeople(p.people) + ' (' + fmtCost(p.cost) + '). Wanneer kunnen jullie komen kijken?';
     btn.href = WA + '?text=' + encodeURIComponent(msg);
   }
 
