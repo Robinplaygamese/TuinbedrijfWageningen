@@ -1695,6 +1695,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .psr-price small{ display:block; font-family: inherit; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 4px; text-align: right; }
   .psr-price{ text-align: right; }
   @media (max-width: 520px){ .ts-plan{ grid-template-columns: 1fr 1fr; } }
+  .ts-work{ grid-template-columns: repeat(3, 1fr); margin-bottom: 6px; } .ts-work .calc-radio{ font-size: 0.85rem; }  @media (max-width: 520px){ .ts-work{ grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -2023,9 +2024,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <div class="calc-group">
               <span class="calc-label">Hoe groot is je tuin?</span>
               <div class="calc-radios" id="calcSizeGroup">
-                <label class="calc-radio"><input type="radio" name="calcSize" value="klein">Klein · tot 50 m²</label>
-                <label class="calc-radio"><input type="radio" name="calcSize" value="middel" checked>Middel · 50–150 m²</label>
-                <label class="calc-radio"><input type="radio" name="calcSize" value="groot">Groot · 150 m²+</label>
+                <label class="calc-radio"><input type="radio" name="calcSize" value="klein">Klein · ± 40 m²</label>
+                <label class="calc-radio"><input type="radio" name="calcSize" value="middel" checked>Middel · ± 120 m²</label>
+                <label class="calc-radio"><input type="radio" name="calcSize" value="groot">Groot · ± 300 m²</label>
+              </div>
+            </div>
+
+            <div class="calc-group">
+              <span class="calc-label">Hoeveel werk ligt er?</span>
+              <div class="calc-radios ts-work" id="calcWorkGroup">
+                <label class="calc-radio"><input type="radio" name="calcWork" value="weinig">Weinig</label>
+                <label class="calc-radio"><input type="radio" name="calcWork" value="normaal" checked>Normaal</label>
+                <label class="calc-radio"><input type="radio" name="calcWork" value="veel">Veel</label>
               </div>
             </div>
 
@@ -2074,6 +2084,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <div class="ts-garden"><label class="mono" for="tsArea">Tuin</label><span class="ts-num"><input class="calc-num" type="number" id="tsArea" min="0" step="1" placeholder="m²" inputmode="numeric"><span>m²</span></span></div>
           </div>
           <p class="ts-hint">Klopt het niet, of wil je alleen de achtertuin? Pas de m² gewoon aan.</p>
+
+          <span class="calc-label">Hoeveel werk ligt er?</span>
+          <div class="calc-radios ts-work" id="tsWorkGroup">
+                <label class="calc-radio"><input type="radio" name="tsWork" value="weinig">Weinig</label>
+                <label class="calc-radio"><input type="radio" name="tsWork" value="normaal" checked>Normaal</label>
+                <label class="calc-radio"><input type="radio" name="tsWork" value="veel">Veel</label>
+              </div>
+          <p class="ts-hint">Weinig = hier en daar wat. Veel = overal, een dik pak. Ligt er bijvoorbeeld alleen onder de bomen blad, kies dan "weinig".</p>
 
           <span class="calc-label">Wat moet er gebeuren?</span>
           <div class="calc-checks ts-tasks">
@@ -2250,15 +2268,30 @@ svg.leaflet-image-layer.leaflet-interactive path {
   // ph = persoonsuren (totaal werk). Tot 1,5 uur komt er 1 persoon, daarboven 2.
   // ------------------------------------------------------------------
   const UURTARIEF = 12.5;
+  // Tijd groeit minder hard dan het oppervlak: in een grote tuin ligt niet overal blad of onkruid,
+  // en grote stukken gazon gaan sneller per m². uren = c × m²^k  (geijkt: 1000 m² blad ≈ 2 uur alleen)
+  const CURVES = {
+    blad:     { c: 0.0816, k: 0.463 },
+    maaien:   { c: 0.058,  k: 0.55 },
+    onkruid:  { c: 0.2,    k: 0.514 },
+    opruimen: { c: 0.163,  k: 0.463 },
+    winter:   { c: 0.245,  k: 0.463 },
+    compleet: { c: 0.327,  k: 0.463 },
+  };
+  const WORK = { weinig: 0.6, normaal: 1, veel: 1.7 };   // hoeveel werk ligt er?
+  function hoursFor(curve, m2, work){
+    const cv = CURVES[curve];
+    return Math.max(0.5, cv.c * Math.pow(Math.max(m2, 10), cv.k) * (WORK[work] || 1));
+  }
   function plan(ph){
-    const people = ph <= 1.5 ? 1 : 2;
+    const people = ph <= 2.5 ? 1 : 2;   // tot 2,5 uur werk komt er 1 persoon
     const billed = Math.max(ph, people);             // minimaal 1 uur per persoon
     return { ph, people, dur: ph / people, cost: billed * UURTARIEF };
   }
   const fmtDur = d => { const r = Math.max(0.5, Math.round(d * 2) / 2); return r === 0.5 ? '± 30 min' : '± ' + String(r).replace('.', ',') + ' uur'; };
   const fmtPeople = n => n === 1 ? '1 persoon' : n + ' personen';
   const fmtCost = c => { const v = Math.round(c / 2.5) * 2.5; return '± €' + v.toLocaleString('nl-NL', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
-  window.TuinPlan = { plan, fmtDur, fmtPeople, fmtCost, UURTARIEF };
+  window.TuinPlan = { plan, fmtDur, fmtPeople, fmtCost, UURTARIEF, hoursFor, CURVES, WORK };
 
   // Zoekbalk met suggesties
   (function(){
@@ -2268,25 +2301,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
     const res = document.getElementById('psResult');
     const WA = 'https://wa.me/31643444758';
     const SIZES = [
-      { key:'klein',  name:'kleine tuin',      range:'tot 50 m²', max:50 },
-      { key:'middel', name:'middelgrote tuin', range:'50–150 m²', max:150 },
-      { key:'groot',  name:'grote tuin',       range:'150 m²+',   max:Infinity },
+      { key:'klein',  name:'kleine tuin',      range:'± 40 m²',  m2:40,  max:75 },
+      { key:'middel', name:'middelgrote tuin', range:'± 120 m²', m2:120, max:200 },
+      { key:'groot',  name:'grote tuin',       range:'± 300 m²', m2:300, max:Infinity },
     ];
     const sizeFor = m2 => SIZES.find(s => m2 <= s.max);
     // ph = persoonsuren per tuingrootte; per = persoonsuren per eenheid
     const TASKS = [
-      { label:'Blad ruimen', words:['blad','bladeren','blaadjes','herfst','harken','bladruimen'], ph:{klein:2, middel:4, groot:7}, g:true },
-      { label:'Gras maaien + randen', words:['gras','maaien','gazon','grasmaaien','randen'], ph:{klein:1, middel:2, groot:3.5}, g:true },
-      { label:'Onkruid wieden (borders)', words:['onkruid','wieden','border','borders','perken'], ph:{klein:2, middel:4, groot:7}, g:true },
+      { label:'Blad ruimen', words:['blad','bladeren','blaadjes','herfst','harken','bladruimen'], curve:'blad', g:true },
+      { label:'Gras maaien + randen', words:['gras','maaien','gazon','grasmaaien','randen'], curve:'maaien', g:true },
+      { label:'Onkruid wieden (borders)', words:['onkruid','wieden','border','borders','perken'], curve:'onkruid', g:true },
       { label:'Terras / tegels: onkruid uit de voegen', words:['tegels','terras','voegen','voeg','oprit','pad','paden','bestrating'], perM2:1/9, unitM2:'m² bestrating', g:true },
       { label:'Heg snoeien', words:['heg','haag','heggen','snoeien','coniferen','conifeer'], perMeter:2/9, g:true },
       { label:'Struiken snoeien', words:['struik','struiken','snoeien','rozen','bosjes'], perPiece:0.5, unit:'struik', units:'struiken', g:true },
       { label:'Kleine boom snoeien (tot ± 4 m)', words:['boom','bomen','fruitboom','snoeien','takken'], perPiece:2, unit:'boom', units:'bomen', g:true },
-      { label:'Tuin opruimen', words:['opruimen','opruim','rommel','troep','schoonmaken','tuin'], ph:{klein:2, middel:4, groot:7}, g:true },
-      { label:'Tuin winterklaar maken', words:['winter','winterklaar','najaar','herfst','najaarsbeurt'], ph:{klein:3.5, middel:6.5, groot:10.5}, g:true },
-      { label:'Voorjaarsbeurt', words:['voorjaar','lente','voorjaarsbeurt','voorjaarssnoei'], ph:{klein:3.5, middel:6.5, groot:10.5}, g:true },
-      { label:'Complete onderhoudsbeurt', words:['compleet','complete','onderhoud','onderhoudsbeurt','alles','beurt'], ph:{klein:4, middel:7, groot:11.5}, g:true },
-      { label:'Tuin klaarmaken voor verkoop/verhuur', words:['verkoop','verhuur','verhuizen','verhuizing','makelaar','huurder'], ph:{klein:4, middel:7, groot:11.5}, g:true },
+      { label:'Tuin opruimen', words:['opruimen','opruim','rommel','troep','schoonmaken','tuin'], curve:'opruimen', g:true },
+      { label:'Tuin winterklaar maken', words:['winter','winterklaar','najaar','herfst','najaarsbeurt'], curve:'winter', g:true },
+      { label:'Voorjaarsbeurt', words:['voorjaar','lente','voorjaarsbeurt','voorjaarssnoei'], curve:'winter', g:true },
+      { label:'Complete onderhoudsbeurt', words:['compleet','complete','onderhoud','onderhoudsbeurt','alles','beurt'], curve:'compleet', g:true },
+      { label:'Tuin klaarmaken voor verkoop/verhuur', words:['verkoop','verhuur','verhuizen','verhuizing','makelaar','huurder'], curve:'compleet', g:true },
       { label:'Dakgoot leeghalen', words:['dakgoot','goot','dakgoten','regenpijp'], fixed:2.5, unit:'per huis', g:true },
       { label:'Planten of bloembollen poten', words:['planten','plant','bollen','bloembollen','poten','bloemen'], fixed:2, unit:'hangt af van hoeveel', from:true },
       { label:'Kleine reparatie bestrating', words:['bestrating','tegel','tegels','stoep','herstellen','reparatie','losse'], fixed:2.5, unit:'na een kijkje', from:true },
@@ -2316,11 +2349,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       const out = [];
       const add = (t, sub, ph, extra) => out.push(Object.assign({ task:t, label:t.label, sub, p: plan(ph) }, extra || {}));
       tasks.forEach(t => {
-        if(t.ph){
+        if(t.curve){
           if(n && isArea){
-            const s = sizeFor(n);
-            add(t, Math.round(n) + ' m² · ' + s.name, t.ph[s.key], { from: s.key === 'groot', note: n > 300 ? 'Bij zo\'n grote tuin kijken we eerst even hoe lang het echt duurt.' : '' });
-          } else (many ? SIZES : [SIZES[1]]).forEach(s => add(t, s.name + ', ' + s.range, t.ph[s.key], { from: s.key === 'groot' }));
+            add(t, Math.round(n) + ' m² tuin, normale hoeveelheid', hoursFor(t.curve, n, 'normaal'));
+          } else (many ? SIZES : [SIZES[1]]).forEach(s => add(t, s.name + ' (' + s.range + ')', hoursFor(t.curve, s.m2, 'normaal')));
         } else if(t.perMeter){
           (n && isLen ? [Math.round(n)] : many ? [5, 10, 20] : [10]).forEach(m => add(t, m + ' meter heg', m * t.perMeter));
         } else if(t.perM2){
@@ -2400,12 +2432,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   (function(){
     const HEG_PER_M = 2/9;   // persoonsuren per meter heg
     const DAKGOOT = 2.5;     // persoonsuren
-    const SIZE_PH = {
-      blad:    { label: 'Blad ruimen',          klein: 2, middel: 4, groot: 7 },
-      maaien:  { label: 'Gras maaien + randen', klein: 1, middel: 2, groot: 3.5 },
-      onkruid: { label: 'Onkruid wieden',       klein: 2, middel: 4, groot: 7 },
-    };
-    const SIZE_LABELS = { klein: 'klein (tot 50 m²)', middel: 'middel (50–150 m²)', groot: 'groot (150 m²+)' };
+    const SIZE_TASK = { blad: 'Blad ruimen', maaien: 'Gras maaien + randen', onkruid: 'Onkruid wieden' };
+    const SIZE_M2 = { klein: 40, middel: 120, groot: 300 };
+    const SIZE_LABELS = { klein: 'klein (± 40 m²)', middel: 'middel (± 120 m²)', groot: 'groot (± 300 m²)' };
+    const workRadios = Array.from(document.querySelectorAll('#calcWorkGroup input[type="radio"]'));
     const serviceBoxes = Array.from(document.querySelectorAll('#calcServices input[type="checkbox"]'));
     const sizeRadios = Array.from(document.querySelectorAll('#calcSizeGroup input[type="radio"]'));
     const hegGroup = document.getElementById('calcHegGroup');
@@ -2419,14 +2449,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     function syncCheckedStyles(){
       serviceBoxes.forEach(b => b.closest('.calc-check').classList.toggle('is-checked', b.checked));
       sizeRadios.forEach(r => r.closest('.calc-radio').classList.toggle('is-checked', r.checked));
+      workRadios.forEach(r => r.closest('.calc-radio').classList.toggle('is-checked', r.checked));
     }
     function update(){
+      const work = (workRadios.find(r => r.checked) || {}).value || 'normaal';
       const chosen = serviceBoxes.filter(b => b.checked).map(b => b.value);
       const size = (sizeRadios.find(r => r.checked) || sizeRadios[1]).value;
       hegGroup.hidden = !chosen.includes('heg');
       const lines = [];
       chosen.forEach(v => {
-        if(SIZE_PH[v]) lines.push([SIZE_PH[v].label, SIZE_PH[v][size]]);
+        if(SIZE_TASK[v]) lines.push([SIZE_TASK[v], hoursFor(v, SIZE_M2[size], work)]);
         if(v === 'heg'){ const m = Math.max(1, Math.round(Number(hegInput.value) || 0)); lines.push(['Heg snoeien · ' + m + ' m', m * HEG_PER_M]); }
         if(v === 'dakgoot') lines.push(['Dakgoot leeghalen', DAKGOOT]);
       });
@@ -2451,7 +2483,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       noteEl.textContent = note;
     }
     serviceBoxes.forEach(b => b.addEventListener('change', () => { syncCheckedStyles(); update(); }));
-    sizeRadios.forEach(r => r.addEventListener('change', () => { syncCheckedStyles(); update(); }));
+    sizeRadios.concat(workRadios).forEach(r => r.addEventListener('change', () => { syncCheckedStyles(); update(); }));
     hegInput.addEventListener('input', update);
     syncCheckedStyles();
     update();
@@ -2498,23 +2530,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
   const UURTARIEF = 12.5;        // per persoon per uur
   const WA = 'https://wa.me/31643444758';
 
+  // Tijd groeit minder hard dan het oppervlak (niet overal ligt blad/onkruid; groot gazon gaat sneller per m²).
+  // persoonsuren = c × m²^k × hoeveelheid. Geijkt: 1000 m² blad, normale hoeveelheid ≈ 2 uur alleen.
   const SIZE_TASKS = {
-    blad:      { label: 'Blad ruimen',              klein: 2,   middel: 4,   groot: 7 },
-    maaien:    { label: 'Gras maaien + randen',     klein: 1,   middel: 2,   groot: 3.5 },
-    onkruid:   { label: 'Onkruid wieden (borders)', klein: 2,   middel: 4,   groot: 7 },
-    opruimen:  { label: 'Tuin opruimen',            klein: 2,   middel: 4,   groot: 7 },
-    winter:    { label: 'Tuin winterklaar maken',   klein: 3.5, middel: 6.5, groot: 10.5 },
-    compleet:  { label: 'Complete onderhoudsbeurt', klein: 4,   middel: 7,   groot: 11.5 },
+    blad:      { label: 'Blad ruimen',              c: 0.0816, k: 0.463 },
+    maaien:    { label: 'Gras maaien + randen',     c: 0.058,  k: 0.55 },
+    onkruid:   { label: 'Onkruid wieden (borders)', c: 0.2,    k: 0.514 },
+    opruimen:  { label: 'Tuin opruimen',            c: 0.163,  k: 0.463 },
+    winter:    { label: 'Tuin winterklaar maken',   c: 0.245,  k: 0.463 },
+    compleet:  { label: 'Complete onderhoudsbeurt', c: 0.327,  k: 0.463 },
   };
+  const WORK = { weinig: 0.6, normaal: 1, veel: 1.7 };
   const EXTRA_TASKS = {
     terras:  { label: 'Terras / voegen onkruidvrij', per: 1 / 9, unit: 'm²',     input: 'tsTerras' },
     heg:     { label: 'Heg snoeien',                 per: 2 / 9, unit: 'meter',  input: 'tsHeg' },
-    struik:  { label: 'Struiken snoeien',            per: 0.5,   unit: 'struik', units: 'struiken', input: 'tsStruik' },
+    struik:  { label: 'Struiken snoeien',            per: 0.33,   unit: 'struik', units: 'struiken', input: 'tsStruik' },
     dakgoot: { label: 'Dakgoot leeghalen',           fixed: 2.5 },
     afvoer:  { label: 'Groenafval wegbrengen',       per: 0.75,  unit: 'rit', units: 'ritten', input: 'tsAfvoer' },
   };
   function plan(ph) {
-    const people = ph <= 1.5 ? 1 : 2;
+    const people = ph <= 2.5 ? 1 : 2;   // tot 2,5 uur werk komt er 1 persoon
     return { ph, people, dur: ph / people, cost: Math.max(ph, people) * UURTARIEF };
   }
   const hrs = (h) => String(Math.max(0.5, Math.round(h * 2) / 2)).replace('.', ',') + ' uur';
@@ -2549,11 +2584,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
 
   // Persoonsuren voor een klus op basis van tuinoppervlak (vloeiend tussen klein/middel/groot)
-  function sizeHours(t, a) {
-    if (a <= 50) return Math.max(t.klein * Math.max(0.7, a / 50), 0);
-    if (a <= 150) return t.klein + (t.middel - t.klein) * (a - 50) / 100;
-    if (a <= 250) return t.middel + (t.groot - t.middel) * (a - 150) / 100;
-    return t.groot + (t.groot - t.middel) * (a - 250) / 100;
+  function sizeHours(t, a, work) {
+    return Math.max(0.5, t.c * Math.pow(Math.max(a, 10), t.k) * (WORK[work] || 1));
   }
 
   // ------------------------------------------------------------------
@@ -2794,12 +2826,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function update() {
     syncExtras();
     const a = Math.max(0, Number(areaInput.value) || 0);
+    const workEl = root.querySelector('input[name="tsWork"]:checked');
+    const work = workEl ? workEl.value : 'normaal';
+    root.querySelectorAll('input[name="tsWork"]').forEach((r) => r.closest('.calc-radio').classList.toggle('is-checked', r.checked));
     const chosen = boxes.filter((b) => b.checked).map((b) => b.value);
     const lines = [];
     chosen.forEach((v) => {
       if (SIZE_TASKS[v]) {
         if (!a) return;
-        lines.push([SIZE_TASKS[v].label + ' · ' + m2(a), sizeHours(SIZE_TASKS[v], a)]);
+        lines.push([SIZE_TASKS[v].label + ' · ' + m2(a), sizeHours(SIZE_TASKS[v], a, work)]);
       } else if (EXTRA_TASKS[v]) {
         const t = EXTRA_TASKS[v];
         if (t.fixed) { lines.push([t.label, t.fixed]); return; }
@@ -2841,6 +2876,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
 
   boxes.forEach((b) => b.addEventListener('change', update));
+  root.querySelectorAll('input[name="tsWork"]').forEach((r) => r.addEventListener('change', update));
   [areaInput, $('tsTerras'), $('tsHeg'), $('tsStruik'), $('tsAfvoer')].forEach((el) => el && el.addEventListener('input', update));
 
   // Kaart pas laden als de sectie in beeld komt
